@@ -2,9 +2,8 @@
 
 It's modern package that based on generic maps. The package provides many helpers to operate on thread-safe (only) maps. You don't have to worry about the concurrency moment of this map. Under the hood, realization is based on sync.Map. 
 
- 
 # Installation
-```
+``` 
 go get github.com/0x9ef/go-maps
 ```
 
@@ -34,7 +33,7 @@ m.SetIf("one", 1, func(m Map[int, int]) bool {
 ```  
 
 ### Get
-We can get a map key and its value.
+We can get a map value.
 ```go
 m := maps.NewDefaultMap[string, int]()
 m.Set("one", 1)
@@ -45,7 +44,7 @@ if val == 1 {
 ``` 
 
 ### GetOk
-We can get a key and identifier if this key was found.
+We can get a value and identifier if a record was found.
 ```go
 m := maps.NewDefaultMap[string, int]()
 val, ok := m.GetOk("one")
@@ -54,6 +53,31 @@ if !ok {
 } 
 ```   
 
+### GetOrSet
+We can get a value or if value was not found we have to store it.
+```go
+m := maps.NewDefaultMap[string, int]()
+val, loaded := m.GetOrSet("one", 1)
+if !loaded {
+    fmt.Println("key was not found, but we store it")
+}
+fmt.Println(val)
+// 1
+```
+
+### GetAndDelete
+We can get a value and after this delete this value from the map.
+```go
+m := maps.NewDefaultMap[string, int]()
+m.Set("one", 1)
+val, loaded := m.GetAndDelete("one")
+if !loaded {
+    fmt.Println("key was not found, we didn't delete it")
+}
+fmt.Println(val)
+// 1 
+```
+
 ### Delete
 We can delete a key from the map. 
 ```go
@@ -61,7 +85,7 @@ m := maps.NewDefaultMap[string, int]()
 m.Set("one", 1)
 m.Delete("one")
 ```
-
+ 
 ### DeleteIf
 We can delete a key from the map if predicate function is true. 
 ```go
