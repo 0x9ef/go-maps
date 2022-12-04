@@ -1,6 +1,8 @@
 # Go maps
 
-It's modern package that based on generic maps. The package provides many helpers to operate on thread-safe (only) maps. You don't have to worry about the concurrency moment of this map. Under the hood, realization is based on sync.Map. 
+[![Go Tests](https://github.com/0x9ef/go-maps/actions/workflows/go-tests.yml/badge.svg?branch=master)](https://github.com/0x9ef/go-maps/actions/workflows/go-tests.yml)
+
+It's modern package that based on generic maps. The package provides many helpers to operate on thread-safe (only) maps. You don't have to worry about the concurrency moment of this map. Under the hood, realization is based on sync.Map.
 
 # Installation
 ``` 

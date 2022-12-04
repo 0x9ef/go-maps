@@ -22,5 +22,8 @@ jobs:
         with:
           go-version: '^1.18'
 
-      - name: Bench 
+      - name: Tests
+        run: gi test -v ./...
+        
+      - name: Benchmarks 
         run: go test -v -bench=./... -benchmem
