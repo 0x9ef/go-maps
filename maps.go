@@ -33,6 +33,11 @@ type Map[K comparable, V any] interface {
 	Get(key K) V
 	// GetOk returns value and bool flag if a key in the map was found.
 	GetOk(key K) (V, bool)
+	// GetOrSet returns the existing value for the key if present.
+	// Otherwise, it stores and returns the given value.
+	GetOrSet(key K, value V) (V, bool)
+	// GetAndDelete deletes the value for a key, returning the previous value.
+	GetAndDelete(key K) (V, bool)
 	// Delete deletes a key from the map.
 	Delete(key K)
 	// DeleteIf deletes a key from the map if the predicate function f is true.
@@ -48,5 +53,7 @@ type Map[K comparable, V any] interface {
 	Filter(f func(key K, value V) bool) ([]K, []V)
 	// Iterate iterates over each map key and value, if predicate f is false
 	// iterations will be stopped.
+	// Iterate may be O(N) with the number of elements in the map even if f
+	// returns false after a constant number of calls.
 	Iterate(f func(key K, value V) bool)
 }

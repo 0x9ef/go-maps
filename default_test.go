@@ -73,6 +73,22 @@ func BenchmarkDefaultMapGetInt(b *testing.B) {
 	}
 }
 
+func BenchmarkDefaultMapGetOrSetInt(b *testing.B) {
+	m := newDefaultMap[int](b)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = m.GetOrSet(i, i*2)
+	}
+}
+
+func BenchmarkDefaultMapGetAndDeleteInt(b *testing.B) {
+	m := newDefaultMap[int](b)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_, _ = m.GetAndDelete(i)
+	}
+}
+
 func BenchmarkDefaultMapDeleteInt(b *testing.B) {
 	m := newDefaultMap[int](b)
 	b.ResetTimer()

@@ -70,12 +70,18 @@ func (m DefaultMap[K, V]) Get(key K) V {
 
 // GetOk returns value and bool flag if a key in the map was founded.
 func (m DefaultMap[K, V]) GetOk(key K) (V, bool) {
-	value, ok := m.base.getVal(key)
-	if ok {
-		return value, ok
-	}
-	var defaultValue V
-	return defaultValue, false
+	return m.base.getVal(key)
+}
+
+// GetOrSet returns the existing value for the key if present.
+// Otherwise, it stores and returns the given value.
+func (m DefaultMap[K, V]) GetOrSet(key K, value V) (V, bool) {
+	return m.base.getOrSet(key, value)
+}
+
+// GetAndDelete deletes the value for a key, returning the previous value.
+func (m DefaultMap[K, V]) GetAndDelete(key K) (V, bool) {
+	return m.base.getAndDelete(key)
 }
 
 // Delete deletes a key from the map.

@@ -42,15 +42,33 @@ func (m *baseMap[K, V]) exists(key K) bool {
 func (m *baseMap[K, V]) setVal(key K, value V) {
 	n := atomic.AddInt32(&m.len, 1)
 	if n < 0 {
-		panic("negative counter")
+		panic("negative zero")
 	}
 	m.sync.Store(key, value)
 }
 
 func (m *baseMap[K, V]) getVal(key K) (V, bool) {
-	value, ok := m.sync.Load(key)
-	if ok {
-		return value.(V), ok
+	val, ok := m.sync.Load(key)
+	if val != nil {
+		return val.(V), ok
+	}
+	var defaultValue V
+	return defaultValue, false
+}
+
+func (m *baseMap[K, V]) getOrSet(key K, value V) (V, bool) {
+	val, loaded := m.sync.LoadOrStore(key, value)
+	if val != nil {
+		return val.(V), loaded
+	}
+	var defaultValue V
+	return defaultValue, false
+}
+
+func (m *baseMap[K, V]) getAndDelete(key K) (V, bool) {
+	val, ok := m.sync.LoadAndDelete(key)
+	if val != nil {
+		return val.(V), ok
 	}
 	var defaultValue V
 	return defaultValue, false
