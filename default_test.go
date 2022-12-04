@@ -24,9 +24,9 @@ import (
 	"testing"
 )
 
-func newDefaultMap[V any](b *testing.B) Map[int, V] {
+func newDefaultMap[V any](n int) Map[int, V] {
 	m := NewDefaultMap[int, V]()
-	for i := 0; i < b.N; i++ {
+	for i := 0; i < n; i++ {
 		var defaultValue V
 		m.Set(i, defaultValue)
 	}
@@ -34,7 +34,7 @@ func newDefaultMap[V any](b *testing.B) Map[int, V] {
 }
 
 func BenchmarkDefaultMapLenInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Len()
@@ -42,7 +42,7 @@ func BenchmarkDefaultMapLenInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapExistsInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Exists(i)
@@ -50,14 +50,14 @@ func BenchmarkDefaultMapExistsInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapSetInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	for i := 0; i < b.N; i++ {
 		m.Set(i, 0)
 	}
 }
 
 func BenchmarkDefaultMapSetIfInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	for i := 0; i < b.N; i++ {
 		m.SetIf(i, 0, func(m Map[int, int]) bool {
 			return m.Get(b.N) == 0
@@ -66,7 +66,7 @@ func BenchmarkDefaultMapSetIfInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapGetInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Get(i)
@@ -74,7 +74,7 @@ func BenchmarkDefaultMapGetInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapGetOrSetInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _ = m.GetOrSet(i, i*2)
@@ -82,7 +82,7 @@ func BenchmarkDefaultMapGetOrSetInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapGetAndDeleteInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _ = m.GetAndDelete(i)
@@ -90,7 +90,7 @@ func BenchmarkDefaultMapGetAndDeleteInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapDeleteInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		m.Delete(i)
@@ -98,7 +98,7 @@ func BenchmarkDefaultMapDeleteInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapDeleteIfInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		m.DeleteIf(i, func(m Map[int, int]) bool {
@@ -108,7 +108,7 @@ func BenchmarkDefaultMapDeleteIfInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapKeysInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Keys()
@@ -116,7 +116,7 @@ func BenchmarkDefaultMapKeysInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapValuesInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Values()
@@ -124,7 +124,7 @@ func BenchmarkDefaultMapValuesInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapFilterInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_, _ = m.Filter(func(key, value int) bool {
@@ -134,7 +134,7 @@ func BenchmarkDefaultMapFilterInt(b *testing.B) {
 }
 
 func BenchmarkDefaultMapIterateInt(b *testing.B) {
-	m := newDefaultMap[int](b)
+	m := newDefaultMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		m.Iterate(func(key, value int) bool {

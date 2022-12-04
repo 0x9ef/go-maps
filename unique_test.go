@@ -24,16 +24,16 @@ import (
 	"testing"
 )
 
-func newUniqueMap[V any](b *testing.B) UniqueMap[int] {
+func newUniqueMap[V any](n int) UniqueMap[int] {
 	m := NewUniqueMap[int]()
-	for i := 0; i < b.N; i++ {
+	for i := 0; i < n; i++ {
 		m.Set(i)
 	}
 	return m
 }
 
 func BenchmarkUniqueMapLenInt(b *testing.B) {
-	m := newUniqueMap[int](b)
+	m := newUniqueMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Len()
@@ -41,7 +41,7 @@ func BenchmarkUniqueMapLenInt(b *testing.B) {
 }
 
 func BenchmarkUniqueMapExistsInt(b *testing.B) {
-	m := newUniqueMap[int](b)
+	m := newUniqueMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Exists(i)
@@ -56,7 +56,7 @@ func BenchmarkUniqueMapSetInt(b *testing.B) {
 }
 
 func BenchmarkMapSetIf(b *testing.B) {
-	m := newUniqueMap[int](b)
+	m := newUniqueMap[int](b.N)
 	for i := 0; i < b.N; i++ {
 		m.SetIf(i, func(m UniqueMap[int]) bool {
 			return m.Exists(b.N / 2)
@@ -65,7 +65,7 @@ func BenchmarkMapSetIf(b *testing.B) {
 }
 
 func BenchmarkUniqueMapDeleteInt(b *testing.B) {
-	m := newUniqueMap[int](b)
+	m := newUniqueMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		m.Delete(i)
@@ -73,7 +73,7 @@ func BenchmarkUniqueMapDeleteInt(b *testing.B) {
 }
 
 func BenchmarkUniqueMapClearInt(b *testing.B) {
-	m := newUniqueMap[int](b)
+	m := newUniqueMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		m.Clear()
@@ -81,7 +81,7 @@ func BenchmarkUniqueMapClearInt(b *testing.B) {
 }
 
 func BenchmarkUniqueMapKeysInt(b *testing.B) {
-	m := newUniqueMap[int](b)
+	m := newUniqueMap[int](b.N)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		_ = m.Keys()
