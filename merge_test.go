@@ -20,37 +20,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package maps
 
-type Merger[K comparable, V any] interface {
-	// Merge merges all maps to the one combined map.
-	Merge(collection ...Map[K, V]) Map[K, V]
-	// MergeUnique merges only unique elements to the map.
-	MergeUnique(collection ...Map[K, V]) Map[K, V]
+import "testing"
+
+func BenchmarkMerge(b *testing.B) {
+	m0 := newDefaultMap[int](b.N)
+	m1 := newDefaultMap[int](b.N)
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = Merge(m0, m1)
+	}
 }
 
-// Merge merges all maps to the one combined map.
-func Merge[K comparable, V any](collection ...Map[K, V]) Map[K, V] {
-	mergeMap := NewDefaultMap[K, V]()
-	for _, next := range collection {
-		next.Iterate(func(key K, value V) bool {
-			mergeMap.base.setVal(key, value)
-			return true
-		})
-	}
-	return mergeMap
-}
+func BenchmarkMergeUnique(b *testing.B) {
+	m0 := newDefaultMap[int](b.N)
+	m1 := newDefaultMap[int](b.N / 2)
 
-// MergeUnique merges only unique elements to the one combined map.
-func MergeUnique[K comparable, V any](collection ...Map[K, V]) Map[K, V] {
-	mergeMap := NewDefaultMap[K, V]()
-	for _, next := range collection {
-		next.Iterate(func(key K, val V) bool {
-			ok := mergeMap.base.exists(key)
-			if !ok {
-				mergeMap.base.setVal(key, val)
-				return true
-			}
-			return false
-		})
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		_ = MergeUnique(m0, m1)
 	}
-	return mergeMap
 }
