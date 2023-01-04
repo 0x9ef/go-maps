@@ -42,7 +42,7 @@ func (m *baseMap[K, V]) exists(key K) bool {
 func (m *baseMap[K, V]) setVal(key K, value V) {
 	n := atomic.AddInt32(&m.len, 1)
 	if n < 0 {
-		panic("negative zero")
+		panic("negative zero length")
 	}
 	m.sync.Store(key, value)
 }
@@ -52,8 +52,7 @@ func (m *baseMap[K, V]) getVal(key K) (V, bool) {
 	if val != nil {
 		return val.(V), ok
 	}
-	var defaultValue V
-	return defaultValue, false
+	return *new(V), false
 }
 
 func (m *baseMap[K, V]) getOrSet(key K, value V) (V, bool) {
@@ -61,8 +60,7 @@ func (m *baseMap[K, V]) getOrSet(key K, value V) (V, bool) {
 	if val != nil {
 		return val.(V), loaded
 	}
-	var defaultValue V
-	return defaultValue, false
+	return *new(V), false
 }
 
 func (m *baseMap[K, V]) getAndDelete(key K) (V, bool) {
@@ -70,8 +68,7 @@ func (m *baseMap[K, V]) getAndDelete(key K) (V, bool) {
 	if val != nil {
 		return val.(V), ok
 	}
-	var defaultValue V
-	return defaultValue, false
+	return *new(V), false
 }
 
 func (m *baseMap[K, V]) delete(key K) {
@@ -82,7 +79,7 @@ func (m *baseMap[K, V]) delete(key K) {
 func (m *baseMap[K, V]) clear() {
 	m.sync.Range(func(key, value any) bool {
 		if key != nil {
-			atomic.AddInt32(&m.len, ^int32(0))
+			atomic.AddInt32(&m.len, ^int32(0)) // decrement counter
 			m.sync.Delete(key)
 			return true
 		}
